@@ -4,6 +4,7 @@
 // opencv_helloworld.cpp : Defines the entry point for the console 
 //application.
 #include "Header.h"
+#include "Functions.h"
 int main()
 {
 	Mat output;
@@ -18,6 +19,20 @@ int main()
 	while (1) {
 		cap >> output;
 		imshow("webcam input", output);
+		char c = (char)waitKey(10);
+		if (c == 27) break; //Press escape to stop program 
+
+	}
+	while (1) {
+	Mat grayout = rgbtogray(output);
+	imshow("Gray output", grayout);
+	char c = (char)waitKey(10);
+	if (c == 27) break; //Press escape to stop program 
+	}
+	Mat grayout = rgbtogray(output);
+	Mat detected_edges = CannyThreshold(grayout);
+	while (1) {
+		imshow("Edge detect", detected_edges);
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}
