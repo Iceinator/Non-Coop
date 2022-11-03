@@ -141,6 +141,15 @@
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Header.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Data\313203981_1538771779893678_1321708788536571748_n.jpg" />
+    <Image Include="..\..\Data\313989849_654973116166207_8548235462508876784_n.jpg" />
+    <Image Include="..\..\Data\314030002_1725728987812503_895376074281752563_n.jpg" />
+    <Image Include="..\..\Data\314364512_678782477205020_5925544091503977094_n.jpg" />
+    <Image Include="..\..\Data\314379773_814713596451058_951117416348934086_n.jpg" />
+    <Image Include="..\..\Data\314383062_434843895389635_5739049404189567006_n.jpg" />
+    <Image Include="..\..\Data\314397410_3273834992856168_3364101443093663813_n.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

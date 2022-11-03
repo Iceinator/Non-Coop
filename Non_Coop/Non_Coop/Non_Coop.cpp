@@ -7,29 +7,18 @@
 #include "Functions.h"
 int main()
 {
-	Mat output;
-	VideoCapture cap(0); //Try changing to 1 if not working 
-	//Check if camera is available 
-	if (!cap.isOpened())
-	{
-		cout << "Could not initialize capturing...\n";
-		return 0;
-	}
-	//Show Camera output 
+	Mat output = imread("..\\..\\.\\Data\\313203981_1538771779893678_1321708788536571748_n.jpg");
 	while (1) {
-		cap >> output;
-		imshow("webcam input", output);
+		imshow("Loaded image", output);
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
-
 	}
-	while (1) {
 	Mat grayout = rgbtogray(output);
+	while (1) {
 	imshow("Gray output", grayout);
 	char c = (char)waitKey(10);
 	if (c == 27) break; //Press escape to stop program 
 	}
-	Mat grayout = rgbtogray(output);
 	Mat detected_edges = CannyThreshold(grayout);
 	while (1) {
 		imshow("Edge detect", detected_edges);

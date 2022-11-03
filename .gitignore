@@ -3,3 +3,5 @@ Non_Coop/.vs/Non_Coop/v17/ipch/AutoPCH/eae826505955f363/NON_COOP.ipch
 *.ipch
 *.tlog
 *.idb
+*.vsidx
+*.tlog
