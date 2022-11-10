@@ -8,20 +8,33 @@
 int main()
 {
 	Mat output = imread("..\\..\\.\\Data\\313203981_1538771779893678_1321708788536571748_n.jpg");
+	Mat img2 = imread("..\\..\\.\\Data\\314379773_814713596451058_951117416348934086_n.jpg");
+	resize(output, output, Size(854, 480));
+	resize(img2, img2, Size(854, 480));
+
+	//while (1) {
+	//	imshow("Loaded image", output);
+	//	char c = (char)waitKey(10);
+	//	if (c == 27) break; //Press escape to stop program 
+	//}
+	//Mat grayout = rgbtogray(output);
+	//while (1) {
+	//imshow("Gray output", grayout);
+	//char c = (char)waitKey(10);
+	//if (c == 27) break; //Press escape to stop program 
+	//}
+	Mat descriptor1, descriptor2, img_match;
+	vector<KeyPoint> keypoints1, keypoints2;
+
+	img_match, keypoints1, keypoints2, descriptor1, descriptor2 = MatchKeypoints(output, img2, 50);
+	Mat keypointimg1, keypointimg2;
+	drawKeypoints(output, keypoints1, keypointimg1);
+	drawKeypoints(img2, keypoints2, keypointimg2);
+	//imshow("Matches", img_match);
 	while (1) {
-		imshow("Loaded image", output);
-		char c = (char)waitKey(10);
-		if (c == 27) break; //Press escape to stop program 
-	}
-	Mat grayout = rgbtogray(output);
-	while (1) {
-	imshow("Gray output", grayout);
-	char c = (char)waitKey(10);
-	if (c == 27) break; //Press escape to stop program 
-	}
-	Mat detected_edges = CannyThreshold(grayout);
-	while (1) {
-		imshow("Edge detect", detected_edges);
+		//imshow("Matched keypoints", img_match);
+		imshow("Keypoints img1", keypointimg1);
+		imshow("Keypoints img2", keypointimg2);
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}
