@@ -22,7 +22,7 @@ Mat CannyThreshold(Mat src_img){
 	return dst;
 }
 
-Mat MatchKeypoints(Mat img_1, Mat img_2, int n_features = 50, vector<KeyPoint> keypoints_1,) {
+void MatchKeypoints(Mat img_1, Mat img_2,Mat* out_img, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* descriptor1, Mat* descriptor2, int n_features = 50) {
 	Mat descriptor_1, descriptor_2;
 	vector<KeyPoint> keypoints_1, keypoints_2;
 	vector<DMatch> matches;
@@ -37,5 +37,11 @@ Mat MatchKeypoints(Mat img_1, Mat img_2, int n_features = 50, vector<KeyPoint> k
 	Mat img_match;
 	drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
 		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	return img_match, keypoints_1, keypoints_2, descriptor_1, descriptor_2;
+	//return img_match, keypoints_1, keypoints_2, descriptor_1, descriptor_2;
+	*out_img = img_match.clone();
+	*keypoints1 = keypoints_1;
+	*keypoints2 = keypoints_2;
+	*descriptor1 = descriptor_1.clone();
+	*descriptor2 = descriptor_2.clone();
+
 }
