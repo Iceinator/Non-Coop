@@ -7,18 +7,20 @@
 #include "Functions.h"
 int main()
 {
-	Mat output = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_46.png");
-	Mat img2 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_47.png");
-	//resize(output, output, Size(854, 480));
-	//resize(img2, img2, Size(854, 480));
+	//Mat output = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_83.png");
+	Mat output = imread("..\\..\\.\\Data\\314364512_678782477205020_5925544091503977094_n.jpg");
+	//Mat img2 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_84.png");
+	Mat img2 = imread("..\\..\\.\\Data\\314379773_814713596451058_951117416348934086_n.jpg");
+	resize(output, output, Size(854, 480));
+	resize(img2, img2, Size(854, 480));
 	Mat descriptor1;
 	Mat descriptor2;
 	Mat img_match;
 	vector<KeyPoint> keypoints1;
 	vector<KeyPoint> keypoints2;
 	vector<DMatch> matched_keypoints;
-	
-	MatchKeypoints(output,img2,&img_match,&keypoints1,&keypoints2,&descriptor1,&descriptor2,&matched_keypoints,100);
+
+	MatchKeypoints(output, img2, &img_match, &keypoints1, &keypoints2, &descriptor1, &descriptor2, &matched_keypoints, 500);
 	Mat keypointimg1, keypointimg2;
 	drawKeypoints(output, keypoints1, keypointimg1);
 	drawKeypoints(img2, keypoints2, keypointimg2);
@@ -30,10 +32,10 @@ int main()
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}
-	Mat homography,res;
+	Mat homography, res;
 	homographyCalculator(&matched_keypoints, &keypoints1, &keypoints2, &homography, &output, &img2, &res);
 	cout << homography;
-	Mat K = (Mat_<double>(3, 3) << 1, 0, 1, 0, 1, 1, 0, 0, 1);
+	Mat K = (Mat_<double>(3, 3) << 1084.68897884346, 0, 297.086796634874, 0, 1084.57557605294, 249.571718427411, 0, 0, 1);
 	vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
 	int solutions = decomposeHomographyMat(homography, K, Rs_decomp, ts_decomp, normals_decomp);
 	for (int i = 0; i < solutions; i++)
@@ -49,9 +51,46 @@ int main()
 		cout << "plane normal from homography decomposition: " << normals_decomp[i].t() << endl;
 		//cout << "plane normal at camera 1 pose: " << normal1.t() << endl << endl;
 	}
-
+	Vec3f X=(1,0,0);
+	X[0] = 1.0;
+	Vec3f Y = (0, 0, 0);
+	Y[1] = -1.0;
+	Vec3f Z = (0, 0, 0);
+	Z[2] = 1;
+	Vec3f X_R = rotateVector(X, Rs_decomp[0]);
+	Vec3f X_R_Scaled;
+	Vec3f Y_R_Scaled;
+	Vec3f Z_R_Scaled;
+	X_R_Scaled[0] = X_R[0] * 50;
+	X_R_Scaled[1] = X_R[1] * 50;
+	X_R_Scaled[2] = X_R[2] * 50;
+	Vec3f Y_R = rotateVector(Y, Rs_decomp[0]);
+	Y_R_Scaled[0] = Y_R[0] * 50;
+	Y_R_Scaled[1] = Y_R[1] * 50;
+	Y_R_Scaled[2] = Y_R[2] * 50;
+	Vec3f Z_R = rotateVector(Z, Rs_decomp[0]);
+	Z_R_Scaled[0] = Z_R[0] * 50;
+	Z_R_Scaled[1] = Z_R[1] * 50;
+	Z_R_Scaled[2] = Z_R[2] * 50;
+	float sumX = 0;
+	float sumY = 0;
+	int Nkeypoint = keypoints2.size();
+	for (int i = 0; i<Nkeypoint; i++) {
+		Point2f p = keypoints2[i].pt;
+		sumX += p.x;
+		sumY += p.y;
+	}
+	Point_<int> cp = Point2i(sumX/Nkeypoint, sumY/Nkeypoint);
+	Point_<int> cendx = cp + Point2i(X_R_Scaled[0], X_R_Scaled[1]);
+	Point_<int> cendy = cp + Point2i(Y_R_Scaled[0], Y_R_Scaled[1]);
+	Point_<int> cendz = cp + Point2i(Z_R_Scaled[0], Z_R_Scaled[1]);
+	arrowedLine(img2, cp, cendx, Scalar(255, 0, 0), 1);
+	arrowedLine(img2, cp, cendy, Scalar(0, 255, 0), 1);
+	arrowedLine(img2, cp, cendz, Scalar(0, 0, 255), 1);
+	//cout << keypoints2.pt;
 	while (1) {
 		imshow("Matched keypoints", res);
+		imshow("Attempt at axes", img2);
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}

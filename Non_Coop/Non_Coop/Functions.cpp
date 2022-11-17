@@ -94,3 +94,11 @@ int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* ke
 	*homography = homographytemp;
 	return 0;
 }
+
+Vec3f rotateVector(Vec3f input, Mat RS) {
+	Mat input_t = Mat(input);
+	Mat RS_f;
+	RS.convertTo(RS_f, CV_32FC1);
+	Mat rotated_vector = RS_f * input_t;
+	return Vec3f(rotated_vector);
+}
