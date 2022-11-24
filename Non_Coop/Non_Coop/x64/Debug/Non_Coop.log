@@ -1,82 +1,45 @@
 ﻿  Non_Coop.cpp
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(54,14): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(70,14): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(56,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(72,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(58,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(74,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(77,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(83,47): warning C4244: 'argument': conversion from 'float' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(83,31): warning C4244: 'argument': conversion from 'float' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(84,62): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(102,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
           with
           [
               _Tp=float
+          ]
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(102,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(103,101): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=double
           ]
           and
           [
-              _Tp=int
+              _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(84,47): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
+C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(103,61): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
           with
           [
-              _Tp=float
+              _Tp=double
           ]
           and
           [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(85,62): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
-          with
-          [
               _Tp=float
-          ]
-          and
-          [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(85,47): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=float
-          ]
-          and
-          [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(86,62): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=float
-          ]
-          and
-          [
-              _Tp=int
-          ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(86,47): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=float
-          ]
-          and
-          [
-              _Tp=int
           ]
   Non_Coop.vcxproj -> C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\x64\Debug\Non_Coop.exe
