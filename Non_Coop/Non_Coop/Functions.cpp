@@ -1,4 +1,5 @@
 #include "Header.h"
+
 Mat rgbtogray(Mat input_img) {
 	Mat greyMat;
 	Mat binary_image;
@@ -20,6 +21,20 @@ Mat CannyThreshold(Mat src_img){
     dst = Scalar::all(0);
 	src.copyTo(dst, detected_edges);
 	return dst;
+}
+
+void FindKeypointsRef(Mat Ref,vector<KeyPoint>* keypoints1, Mat* descriptor1) {
+	/* Takes the refernce image and findes the 
+	keypoints and descripertor for the refernce*/
+	
+
+
+
+
+
+
+
+
 }
 
 void MatchKeypoints(Mat img_1, Mat img_2,Mat* out_img, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* descriptor1, Mat* descriptor2,vector<DMatch>* matches_out, int n_features = 50) {
@@ -101,4 +116,190 @@ Vec3f rotateVector(Vec3f input, Mat RS) {
 	RS.convertTo(RS_f, CV_32FC1);
 	Mat rotated_vector = RS_f * input_t;
 	return Vec3f(rotated_vector);
+}
+
+
+
+Point2f Cp(Mat output) {
+	//Funktion Finds the center point
+	
+	
+	// Find point of origin
+	Mat thr, gray, src;
+
+	// convert image to grayscale
+	cvtColor(output, gray, COLOR_BGR2GRAY);
+
+	// convert grayscale to binary image
+	threshold(gray, thr, 100, 255, THRESH_BINARY);
+
+	// finds first order moments of the image
+	Moments m = moments(thr, true);
+	Point2f p(m.m10 / m.m00, m.m01 / m.m00);
+	return p;
+}
+
+
+Point2f CpTrack(Mat H, Point2f Cp) {
+	//Finds the the center point in Ref imge and tracks to the new image
+	Point2f CpNew;
+	Mat d_f;
+	Mat_<float> H2;
+	H.copyTo(H2);
+	
+
+	Vec3f C = (0, 0, 1);
+	C[0] = Cp.x;
+	C[1] = Cp.y;
+	C[2] = 1;
+	
+	//Making the dot produckt
+	d_f = H2 * Mat(C);
+
+	//Getting the values out to do cals
+	float a = d_f.at<float>(0, 0);
+	float b = d_f.at<float>(1, 0);
+	float c = d_f.at<float>(2, 0);
+	CpNew.x = a / c;
+	CpNew.y = b / c;
+
+	return CpNew;
+}
+
+int BestRotSolution(int solutions, vector<Mat> Rs_decomp, vector<Mat>ts_decomp, vector<Mat>normals_decomp,double d_inv1) {
+	int best_decomp;
+	double current_minimum = 500;
+	for (int i = 0; i < solutions; i++)
+		// Focal length = 5mm
+	{
+	
+		double factor_d1 = 1.0/d_inv1;
+		Mat rvec_decomp;
+		Rodrigues(Rs_decomp[i], rvec_decomp);
+		cout << "Solution " << i << ":" << endl;
+		cout << "rvec from homography decomposition: " << rvec_decomp.t() << endl;
+		double sqrt_squares = sqrt(pow(rvec_decomp.at<double>(0, 0), 2) + pow(rvec_decomp.at<double>(1, 0), 2) + pow(rvec_decomp.at<double>(2, 0), 2));
+		if (sqrt_squares <= current_minimum) {
+			current_minimum = sqrt_squares;
+			best_decomp = i;
+		}
+		cout << "Length of rotation vector: " << sqrt_squares << "\n";
+		cout << "Best solution: " << best_decomp << "\n";
+		//cout << "rvec from camera displacement: " << rvec_1to2.t() << endl;
+		cout << "tvec from homography decomposition: " << ts_decomp[i].t() << " and scaled by d: " << factor_d1 * ts_decomp[i].t() << endl;
+		//cout << "tvec from camera displacement: " << t_1to2.t() << endl;
+		cout << "plane normal from homography decomposition: " << normals_decomp[i].t() << endl;
+		//cout << "plane normal at camera 1 pose: " << normal1.t() << endl << endl;
+
+
+	}
+
+	return best_decomp;
+}
+
+
+//Draws The Centerpoint in the img the roation
+void DrawPOS(Mat* img2, vector<Mat> Rs_decomp,int best_decomp,Sat* Sat1) {
+	
+	
+	Vec3f X = (1, 0, 0);
+	X[0] = 1.0;
+	Vec3f Y = (0, 0, 0);
+	Y[1] = -1.0;
+	Vec3f Z = (0, 0, 0);
+	Z[2] = 1;
+	Vec3f X_R = rotateVector(X, Rs_decomp[best_decomp]);
+	Vec3f X_R_Scaled;
+	Vec3f Y_R_Scaled;
+	Vec3f Z_R_Scaled;
+	X_R_Scaled[0] = X_R[0] * 50;
+	X_R_Scaled[1] = X_R[1] * 50;
+	X_R_Scaled[2] = X_R[2] * 50;
+	Vec3f Y_R = rotateVector(Y, Rs_decomp[best_decomp]);
+	Y_R_Scaled[0] = Y_R[0] * 50;
+	Y_R_Scaled[1] = Y_R[1] * 50;
+	Y_R_Scaled[2] = Y_R[2] * 50;
+	Vec3f Z_R = rotateVector(Z, Rs_decomp[best_decomp]);
+	Z_R_Scaled[0] = Z_R[0] * 50;
+	Z_R_Scaled[1] = Z_R[1] * 50;
+	Z_R_Scaled[2] = Z_R[2] * 50;
+
+
+
+	//Point2f p_t = p + Point2f(ts_decomp[best_decomp].at<double>(0,0), ts_decomp[best_decomp].at<double>(1, 0));
+
+	//Point_<int> cp = Point2i(sumX/Nkeypoint, sumY/Nkeypoint);
+	Point_<int> cendx = Sat1->CenterPoint + Point2f(X_R_Scaled[0], X_R_Scaled[1]);
+	Point_<int> cendy = Sat1->CenterPoint + Point2f(Y_R_Scaled[0], Y_R_Scaled[1]);
+	Point_<int> cendz = Sat1->CenterPoint + Point2f(Z_R_Scaled[0], Z_R_Scaled[1]);
+
+
+	arrowedLine(*img2, Sat1->CenterPoint, cendx, Scalar(255, 0, 0), 1);
+	arrowedLine(*img2, Sat1->CenterPoint, cendy, Scalar(0, 255, 0), 1);
+	arrowedLine(*img2, Sat1->CenterPoint, cendz, Scalar(0, 0, 255), 1);
+
+
+}
+
+vector<Point3f> calcChessboardCorners(Size boardSize,int squareSize) {
+	
+	vector<Point3f> objectPoints;
+	for (int i = 0; i < boardSize.height; i++)
+		for (int j = 0; j < boardSize.width; j++)
+			objectPoints.push_back(Point3f(float(j * squareSize),
+				float(i * squareSize), 0));
+	return objectPoints;
+}
+
+double Distance(Mat Skak1,Mat Skak2, Sat* Sat1,float squareSize) {
+	//Takes two chess boards and computes the distance from the image plane to the object plan
+	
+	
+	Size patternSize = Size(9, 6);
+	vector<Point2f> corners1, corners2;
+	bool found1 = findChessboardCorners(Skak1, patternSize, corners1);
+	bool found2 = findChessboardCorners(Skak2, patternSize, corners2);
+	if (!found1 || !found2)
+	{
+		cout << "Error, cannot find the chessboard corners in both images." << endl;
+		return 1;
+	}
+	vector<Point3f> objectPoints;
+	//calsChessboardCorners()
+	
+	objectPoints = calcChessboardCorners(patternSize, squareSize);
+	FileStorage fs(samples::findFile(intrinsicsPath), FileStorage::READ);
+	Mat cameraMatrix, distCoeffs;
+	
+
+	fs["camera_matrix"] >> cameraMatrix;
+	fs["distortion_coefficients"] >> distCoeffs;
+	Mat rvec1, tvec1;
+	solvePnP(objectPoints, corners1, cameraMatrix, distCoeffs, rvec1, tvec1);
+	Mat rvec2, tvec2;
+	solvePnP(objectPoints, corners2, cameraMatrix, distCoeffs, rvec2, tvec2);
+	
+	Mat R1 = rvec2 * rvec2.t();
+	
+	Mat normal = (Mat_<double>(3, 1) << 0, 0, 1);
+	Mat normal1 = R1 * normal;
+
+	Mat origin(3, 1, CV_64F, Scalar(0));
+	Mat origin1 = R1 * origin + tvec1;
+	double d_inv1 = 1.0 / normal1.dot(origin1);
+
+
+	return d_inv1;
+}
+
+//Finds the xyz 
+void Traslation(Sat* Sat1,vector<Mat> ts_decomp, double d_inv,int best) {
+	//Finds the xyz translation in then world coordinates
+	double d = 1.0 / d_inv;
+	Mat ts_abs = d * ts_decomp[best].t();
+
+	//Opdates the POS of the satelite in world frame.
+	Sat1->CpOpj.x = ts_abs.at<float>(0, 0);
+	Sat1->CpOpj.y = ts_abs.at<float>(1, 0);
+	Sat1->CpOpj.z = ts_abs.at<float>(2, 0);
 }
