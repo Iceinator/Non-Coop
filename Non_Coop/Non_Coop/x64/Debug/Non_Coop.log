@@ -1,40 +1,33 @@
 ﻿  Functions.cpp
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(124,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(158,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(124,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(158,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(137,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(170,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(191,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(222,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(193,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(224,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(195,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(226,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(260,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,35): error C2065: 'intrinsicsPath': undeclared identifier
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,69): error C2665: 'cv::FileStorage::FileStorage': none of the 3 overloads could convert all the argument types
-C:\opencv\build\include\opencv2\core\persistence.hpp(467,1): message : could be 'cv::FileStorage::FileStorage(const cv::FileStorage &)'
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,16): message : 'cv::FileStorage::FileStorage(const cv::FileStorage &)': cannot convert argument 1 from 'cv::FileStorage::Mode' to 'const cv::FileStorage &'
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,69): message : Reason: cannot convert from 'cv::FileStorage::Mode' to 'const cv::FileStorage'
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,65): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-C:\opencv\build\include\opencv2\core\persistence.hpp(467,1): message : see declaration of 'cv::FileStorage::FileStorage'
-C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(261,69): message : while trying to match the argument list '(cv::FileStorage::Mode)'
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(288,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Non_Coop.vcxproj -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\x64\Debug\Non_Coop.exe

@@ -1,5 +1,4 @@
 #include "Header.h"
-
 Mat rgbtogray(Mat input_img) {
 	Mat greyMat;
 	Mat binary_image;
@@ -23,53 +22,76 @@ Mat CannyThreshold(Mat src_img){
 	return dst;
 }
 
-void FindKeypointsRef(Mat Ref,vector<KeyPoint>* keypoints1, Mat* descriptor1) {
+void FindKeypointsRef(Mat Ref,Sat* Sat1, int n_features = 50) {
 	/* Takes the refernce image and findes the 
-	keypoints and descripertor for the refernce*/
+	keypoints and descripertor for the refernce
 	
+	Input ref image
 
+	Output Keypoints, Descriptor TO Sat class
+	
+	*/
+	Mat descriptor_1;
+	vector<KeyPoint> keypoints_1;
+	
+	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce-Hamming");
+	Ptr<ORB> detector = ORB::create(n_features);
+	Ptr<DescriptorExtractor> extractor;
 
-
-
-
-
-
-
+	//Find key points in ref image
+	detector->detect(Ref, keypoints_1);
+	detector->compute(Ref, keypoints_1, descriptor_1);
+	
+	//Mat img_match;
+	//drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
+		//vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	//return img_match, keypoints_1, keypoints_2, descriptor_1, descriptor_2;
+	
+	Sat1->keypoints1 = keypoints_1;
+	Sat1->descriptor1 = descriptor_1.clone();
 }
 
-void MatchKeypoints(Mat img_1, Mat img_2,Mat* out_img, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* descriptor1, Mat* descriptor2,vector<DMatch>* matches_out, int n_features = 50) {
-	Mat descriptor_1, descriptor_2;
-	vector<KeyPoint> keypoints_1, keypoints_2;
+void MatchKeypoints(Mat imgRef, Mat imgObs,Mat* out_img,Sat* Sat1,vector<DMatch>* matches_out, int n_features = 50) {
+	/*
+	Funktion that matchs the points for the ref imeage to the observed
+	
+	*/
+	
+	Mat descriptor_2;
+	vector<KeyPoint> keypoints_2;
 	vector<DMatch> matches;
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce-Hamming");
 	Ptr<ORB> detector = ORB::create(n_features);
 	Ptr<DescriptorExtractor> extractor;
-	detector->detect(img_1, keypoints_1);
-	detector->detect(img_2, keypoints_2);
-	detector->compute(img_1, keypoints_1, descriptor_1);
-	detector->compute(img_2, keypoints_2, descriptor_2);
-	matcher->match(descriptor_1, descriptor_2, matches);
+	
+	//Find keypoints in obs image and compute descriptor
+	detector->detect(imgObs, keypoints_2);
+	detector->compute(imgObs, keypoints_2, descriptor_2);
+
+	//Match key points
+	matcher->match(Sat1->descriptor1, descriptor_2, matches);
 	Mat img_match;
-	drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
+	drawMatches(imgRef, Sat1->keypoints1, imgObs, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
 		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	//return img_match, keypoints_1, keypoints_2, descriptor_1, descriptor_2;
 	*out_img = img_match.clone();
-	*keypoints1 = keypoints_1;
-	*keypoints2 = keypoints_2;
-	*descriptor1 = descriptor_1.clone();
-	*descriptor2 = descriptor_2.clone();
+	
+	Sat1->keypoints2 = keypoints_2;
+	Sat1->descriptor2 = descriptor_2.clone();
 	*matches_out = matches;
 }
+
 vector<Point2f> Points(vector<KeyPoint> inkeypoints) {
 	vector<Point2f> out;
 	KeyPoint::convert(inkeypoints,out, std::vector< int >());
 	return out;
 }
-int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* homography, Mat* img1, Mat* img2, Mat* res,double nn_match_ratio = 1000,double ransac_thresh = 2.5f) {
+
+int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homography, Mat* img1, Mat* img2, Mat* res,double nn_match_ratio = 1000,double ransac_thresh = 2.5f) {
 	vector<KeyPoint> matched1, matched2;
 	vector<DMatch> mkeypoints = *matched_keypoints;
-	vector<KeyPoint> kpoints1 = *keypoints1;
-	vector<KeyPoint> kpoints2 = *keypoints2;
+	vector<KeyPoint> kpoints1 = Sat1->keypoints1;
+	vector<KeyPoint> kpoints2 = Sat1->keypoints2;
 	for (unsigned i = 0; i < mkeypoints.size(); i++) {
 		//cout << mkeypoints[i].distance;
 		//cout << nn_match_ratio * mkeypoints[i].distance;
@@ -118,8 +140,6 @@ Vec3f rotateVector(Vec3f input, Mat RS) {
 	return Vec3f(rotated_vector);
 }
 
-
-
 Point2f Cp(Mat output) {
 	//Funktion Finds the center point
 	
@@ -138,7 +158,6 @@ Point2f Cp(Mat output) {
 	Point2f p(m.m10 / m.m00, m.m01 / m.m00);
 	return p;
 }
-
 
 Point2f CpTrack(Mat H, Point2f Cp) {
 	//Finds the the center point in Ref imge and tracks to the new image
@@ -197,8 +216,6 @@ int BestRotSolution(int solutions, vector<Mat> Rs_decomp, vector<Mat>ts_decomp, 
 	return best_decomp;
 }
 
-
-//Draws The Centerpoint in the img the roation
 void DrawPOS(Mat* img2, vector<Mat> Rs_decomp,int best_decomp,Sat* Sat1) {
 	
 	
@@ -251,48 +268,50 @@ vector<Point3f> calcChessboardCorners(Size boardSize,int squareSize) {
 	return objectPoints;
 }
 
-double Distance(Mat Skak1,Mat Skak2, Sat* Sat1,float squareSize) {
+double Distance(Mat Skak1, Sat* Sat1,float squareSize,string intrinsicsPath) {
 	//Takes two chess boards and computes the distance from the image plane to the object plan
 	
 	
 	Size patternSize = Size(9, 6);
 	vector<Point2f> corners1, corners2;
 	bool found1 = findChessboardCorners(Skak1, patternSize, corners1);
-	bool found2 = findChessboardCorners(Skak2, patternSize, corners2);
-	if (!found1 || !found2)
+	
+	if (!found1)
 	{
 		cout << "Error, cannot find the chessboard corners in both images." << endl;
 		return 1;
 	}
 	vector<Point3f> objectPoints;
 	//calsChessboardCorners()
-	
+	string intrinsicsPathCM = intrinsicsPath + "D1";
+	string intrinsicsPathDC = intrinsicsPath + "K1";
 	objectPoints = calcChessboardCorners(patternSize, squareSize);
-	FileStorage fs(samples::findFile(intrinsicsPath), FileStorage::READ);
+	FileStorage fsCM(samples::findFile(intrinsicsPathCM), FileStorage::READ);
+	FileStorage fsDC(samples::findFile(intrinsicsPathDC), FileStorage::READ);
 	Mat cameraMatrix, distCoeffs;
 	
 
-	fs["camera_matrix"] >> cameraMatrix;
-	fs["distortion_coefficients"] >> distCoeffs;
+	fsCM["CM"] >> cameraMatrix;
+	fsDC["DC"] >> distCoeffs;
+	
 	Mat rvec1, tvec1;
 	solvePnP(objectPoints, corners1, cameraMatrix, distCoeffs, rvec1, tvec1);
-	Mat rvec2, tvec2;
-	solvePnP(objectPoints, corners2, cameraMatrix, distCoeffs, rvec2, tvec2);
+	//Mat rvec2, tvec2;
+	//solvePnP(objectPoints, corners2, cameraMatrix, distCoeffs, rvec2, tvec2);
 	
-	Mat R1 = rvec2 * rvec2.t();
+	
 	
 	Mat normal = (Mat_<double>(3, 1) << 0, 0, 1);
-	Mat normal1 = R1 * normal;
+	Mat normal1 = rvec1 * normal;
 
 	Mat origin(3, 1, CV_64F, Scalar(0));
-	Mat origin1 = R1 * origin + tvec1;
+	Mat origin1 = rvec1 * origin + tvec1;
 	double d_inv1 = 1.0 / normal1.dot(origin1);
 
 
 	return d_inv1;
 }
 
-//Finds the xyz 
 void Traslation(Sat* Sat1,vector<Mat> ts_decomp, double d_inv,int best) {
 	//Finds the xyz translation in then world coordinates
 	double d = 1.0 / d_inv;
@@ -302,4 +321,44 @@ void Traslation(Sat* Sat1,vector<Mat> ts_decomp, double d_inv,int best) {
 	Sat1->CpOpj.x = ts_abs.at<float>(0, 0);
 	Sat1->CpOpj.y = ts_abs.at<float>(1, 0);
 	Sat1->CpOpj.z = ts_abs.at<float>(2, 0);
+}
+
+int GetFrame(string Filename, Mat* Outframe) {
+	// Create a VideoCapture object and open the input file
+  // If the input is the web camera, pass 0 instead of the video file name
+	VideoCapture cap(Filename);
+	Mat frame;
+	// Check if camera opened successfully
+	if (!cap.isOpened()) {
+		cout << "Error opening video stream or file" << endl;
+		return -1;
+	}
+
+	while (1) {
+		
+		
+		// Capture frame-by-frame
+		cap >> frame;
+
+		// If the frame is empty, break immediately
+		if (frame.empty())
+			break;
+
+		// Display the resulting frame
+		imshow("Frame", frame);
+
+		// Press  ESC on keyboard to exit
+		char c = (char)waitKey(25);
+		if (c == 27)
+			break;
+	}
+
+	// When everything done, release the video capture object
+	cap.release();
+
+	// Closes all the frames
+	destroyAllWindows();
+
+	*Outframe = frame;
+	return 0;
 }

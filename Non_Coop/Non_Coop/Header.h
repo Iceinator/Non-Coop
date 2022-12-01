@@ -17,12 +17,14 @@ public:
 	vector<KeyPoint> keypoints1;
 	vector<KeyPoint> keypoints2;
 	vector<DMatch> matched_keypoints;
+	Mat descriptor1;
+	Mat descriptor2;
+
+	
 
 	Point2f CenterPoint;//Centerpoint in imageplane
 	Point3f Rotation;//Rotation in x,y,z
 	Point3f CpOpj;//Centerpoint in object
 	float RefDist; //Distance in refimg
-
-
 
 };
