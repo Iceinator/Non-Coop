@@ -7,6 +7,8 @@
 #include "Functions.h"
 int main()
 {
+	
+	/*
 	Mat output = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_4\\Cropped\\image_data_1_35.png");
 	//Mat output = imread("..\\..\\.\\Data\\314364512_678782477205020_5925544091503977094_n.jpg");
 	Mat img2 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_4\\Cropped\\image_data_1_36.png");
@@ -20,7 +22,9 @@ int main()
 	vector<KeyPoint> keypoints2;
 	vector<DMatch> matched_keypoints;
 
+
 	MatchKeypoints(output, img2, &img_match, &keypoints1, &keypoints2, &descriptor1, &descriptor2, &matched_keypoints, 500);
+
 	Mat keypointimg1, keypointimg2;
 	drawKeypoints(output, keypoints1, keypointimg1);
 	drawKeypoints(img2, keypoints2, keypointimg2);
@@ -34,12 +38,23 @@ int main()
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}
+
+	vector<Point2f> matched_keypoints1, matched_keypoints2; // these are your points that match
+
+
+
 	Mat homography, res;
-	homographyCalculator(&matched_keypoints, &keypoints1, &keypoints2, &homography, &output, &img2, &res);
+
+	vector<KeyPoint> matched_1;
+	vector<KeyPoint> matched_2;
+
+	homographyCalculator(&matched_keypoints, &keypoints1, &keypoints2, &homography, &output, &img2, &res, &matched_1, &matched_2);
 	Mat K = (Mat_<double>(3, 3) << 1084.68897884346, 0, 297.086796634874, 0, 1084.57557605294, 249.571718427411, 0, 0, 1);
 	//Mat homography = K * homography_euclid * K.inv();
-	cout << homography;
 	
+	
+
+	cout << homography;
 	vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
 	int solutions = decomposeHomographyMat(homography, K, Rs_decomp, ts_decomp, normals_decomp);
 	int best_decomp;
@@ -88,19 +103,13 @@ int main()
 	Z_R_Scaled[0] = Z_R[0] * 50;
 	Z_R_Scaled[1] = Z_R[1] * 50;
 	Z_R_Scaled[2] = Z_R[2] * 50;
-	// Find point of origin
-	Mat thr, gray, src;
+	
+	
+	Point2f p = Cp(output);
+	Point2f p_t = CpTrack(homography, p);
 
-	// convert image to grayscale
-	cvtColor(output, gray, COLOR_BGR2GRAY);
 
-	// convert grayscale to binary image
-	threshold(gray, thr, 100, 255, THRESH_BINARY);
-
-	// find moments of the image
-	Moments m = moments(thr, true);
-	Point2f p(m.m10 / m.m00, m.m01 / m.m00);
-	Point2f p_t = p + Point2f(ts_decomp[best_decomp].at<double>(0,0), ts_decomp[best_decomp].at<double>(1, 0));
+	//Point2f p_t = p + Point2f(ts_decomp[best_decomp].at<double>(0,0), ts_decomp[best_decomp].at<double>(1, 0));
 
 	//Point_<int> cp = Point2i(sumX/Nkeypoint, sumY/Nkeypoint);
 	Point_<int> cendx = p_t + Point2f(X_R_Scaled[0], X_R_Scaled[1]);
@@ -124,6 +133,75 @@ int main()
 
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
+	}
+	*/
+
+	//Does it on a Number of images.
+	
+
+	/*____________________init______________________________*/
+	Sat Cubesat;
+	Mat descriptor1;
+	Mat descriptor2;
+	Mat img_match;
+	vector<KeyPoint> keypoints1;
+	vector<KeyPoint> keypoints2;
+	vector<DMatch> matched_keypoints;
+	Mat homography, res,imgRef;
+	vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
+	Mat K = (Mat_<double>(3, 3) << 1084.68897884346, 0, 297.086796634874, 0, 1084.57557605294, 249.571718427411, 0, 0, 1);
+	/*_______________________________________________________________________________________________________________________*/
+
+	int f = GetFrame("", imgRef);
+
+
+	//Loading images
+	string Path0 = "..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_" + to_string(45) + ".png";
+	//Mat imgRef = imread(Path0);
+	Point2f Cp0 = Cp(imgRef);
+	//Calc the distance d in the ref image
+	//Load the chess boad images
+	Mat skak1 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_");
+	//Mat skak2 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_");
+	string PathIntri = "..\\..\\.\\Data\\";
+
+	//Finding the distance to the opject in ref image
+
+	float SquarSize=0.022; //22mm Squar Size for the used board
+	double d = Distance(skak1, &Cubesat, SquarSize, PathIntri);
+
+
+
+	//Mat descriptor1;
+	for (int i = 46; i < 92;i++) {
+		
+		string Path2 = "..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_" + to_string(i+1) + ".png";
+		Mat imgObs = imread(Path2);
+	
+		MatchKeypoints(imgRef, imgObs, &img_match,&Cubesat, &matched_keypoints, 500);
+		homographyCalculator(&matched_keypoints,&Cubesat, &homography, &imgRef, &imgObs, &res);
+		vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
+
+		int solutions = decomposeHomographyMat(homography, K, Rs_decomp, ts_decomp, normals_decomp);
+		int best = BestRotSolution(solutions, Rs_decomp, ts_decomp, normals_decomp,d);
+		Cubesat.CenterPoint = CpTrack(homography, Cp0);
+		//Cubesat.Rotation.x = float(ts_decomp[best]);
+
+		cout << "\nRs comp values" << Rs_decomp[best];
+		DrawPOS(&imgObs, Rs_decomp, best, &Cubesat);
+
+		string Rotation[3] = { "x:","y:","z:" };
+		//Rotation[0] = Rotation[0] + to_string(ts_decomp[0]);
+		//Rotation[1] = Rotation[1] + to_string(ts_decomp[1]);
+		//Rotation[2] = Rotation[2] + to_string(ts_decomp[2]);
+
+		putText(imgObs, Rotation[0], Point(10, imgObs.rows / 2+30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 0, 255), 2);
+		putText(imgObs, Rotation[1], Point(10, imgObs.rows / 2), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 255, 0), 2);
+		putText(imgObs, Rotation[2], Point(10, imgObs.rows / 2-30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
+		imshow("End", imgObs);
+		char c = (char)waitKey(10);
+
+
 	}
 	return 0;
 }

@@ -1,45 +1,50 @@
-﻿  Non_Coop.cpp
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(70,14): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+﻿  Functions.cpp
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(109,17): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(110,17): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(119,20): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(120,20): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(219,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(72,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(219,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(74,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(231,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(102,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(283,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(102,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(285,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(103,101): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(287,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
           with
-          [
-              _Tp=double
-          ]
-          and
           [
               _Tp=float
           ]
-C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\Non_Coop\Non_Coop.cpp(103,61): warning C4244: 'argument': conversion from '_Tp' to '_Tp', possible loss of data
-          with
-          [
-              _Tp=double
-          ]
-          and
-          [
-              _Tp=float
-          ]
-  Non_Coop.vcxproj -> C:\Users\silla\OneDrive - Danmarks Tekniske Universitet\DTU\9. Semester\30330 - Image Analysis with Microcomputer\Project\Non-Coop\Non_Coop\x64\Debug\Non_Coop.exe
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(349,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Non_Coop.cpp
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Non_Coop.cpp(155,29): error C2664: 'void GetFrame(std::string,cv::Mat *)': cannot convert argument 2 from 'cv::Mat' to 'cv::Mat *'
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Non_Coop.cpp(155,23): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.h(16,6): message : see declaration of 'GetFrame'
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Non_Coop.cpp(170,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating Code...
