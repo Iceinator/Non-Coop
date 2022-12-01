@@ -21,6 +21,7 @@ int main()
 	vector<DMatch> matched_keypoints;
 
 	MatchKeypoints(output, img2, &img_match, &keypoints1, &keypoints2, &descriptor1, &descriptor2, &matched_keypoints, 500);
+
 	Mat keypointimg1, keypointimg2;
 	drawKeypoints(output, keypoints1, keypointimg1);
 	drawKeypoints(img2, keypoints2, keypointimg2);
@@ -34,12 +35,23 @@ int main()
 		char c = (char)waitKey(10);
 		if (c == 27) break; //Press escape to stop program 
 	}
+
+	vector<Point2f> matched_keypoints1, matched_keypoints2; // these are your points that match
+
+
+
 	Mat homography, res;
-	homographyCalculator(&matched_keypoints, &keypoints1, &keypoints2, &homography, &output, &img2, &res);
+
+	vector<KeyPoint> matched_1;
+	vector<KeyPoint> matched_2;
+
+	homographyCalculator(&matched_keypoints, &keypoints1, &keypoints2, &homography, &output, &img2, &res, &matched_1, &matched_2);
 	Mat K = (Mat_<double>(3, 3) << 1084.68897884346, 0, 297.086796634874, 0, 1084.57557605294, 249.571718427411, 0, 0, 1);
 	//Mat homography = K * homography_euclid * K.inv();
-	cout << homography;
 	
+	
+
+	cout << homography;
 	vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
 	int solutions = decomposeHomographyMat(homography, K, Rs_decomp, ts_decomp, normals_decomp);
 	int best_decomp;

@@ -50,8 +50,9 @@ vector<Point2f> Points(vector<KeyPoint> inkeypoints) {
 	KeyPoint::convert(inkeypoints,out, std::vector< int >());
 	return out;
 }
-int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* homography, Mat* img1, Mat* img2, Mat* res,double nn_match_ratio = 1000,double ransac_thresh = 2.5f) {
-	vector<KeyPoint> matched1, matched2;
+int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* keypoints1, vector<KeyPoint>* keypoints2, Mat* homography, Mat* img1, Mat* img2, Mat* res, vector<KeyPoint>* matched_1, vector<KeyPoint>* matched_2, double nn_match_ratio = 1000,double ransac_thresh = 2.5f) { //
+	vector<KeyPoint> matched1 = *matched_1;
+	vector<KeyPoint> matched2 = *matched_2;
 	vector<DMatch> mkeypoints = *matched_keypoints;
 	vector<KeyPoint> kpoints1 = *keypoints1;
 	vector<KeyPoint> kpoints2 = *keypoints2;
@@ -63,11 +64,71 @@ int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* ke
 			matched2.push_back(kpoints2[mkeypoints[i].trainIdx]);
 		}
 	}
+
+	// Angles (angs) and magnitudes (mags)
+	vector<float> angs(matched1.size());
+	vector<float> mags(matched1.size());
+
+	for (int i = 0; i < matched1.size(); i++) {
+		angs[i] = atan((matched2[i].pt.y - matched1[i].pt.y) / (matched2[i].pt.x - matched1[i].pt.x) * 180 / 3.1415926);
+		mags[i] = sqrt(pow(matched2[i].pt.y - matched1[i].pt.y, 2) + pow(matched2[i].pt.x - matched1[i].pt.x, 2));
+		//cout << "Angle of matched pairs at i = " << i << ": " << setprecision(2) << angs[i] << " deg";
+		//cout << ", Magnitude: " << mags[i] << endl;
+	}
+
+	float stdDev_ang = 0.0;
+	float stdDev_mag = 0.0;
+
+	for (int k = 0; k < matched1.size(); k++) {
+		stdDev_ang += pow(angs[k] - mean(angs)[0], 2);
+		stdDev_mag += pow(mags[k] - mean(mags)[0], 2);
+	}
+
+	stdDev_ang = sqrt(stdDev_ang / ((float)matched1.size()));
+	stdDev_mag = sqrt(stdDev_mag / ((float)matched1.size()));
+
+	//cout << "std angles: " << stdDev_ang << endl;
+	//cout << "std magnitudes: " << stdDev_mag << endl;
+
+	vector<bool> sorted_matches_ang(matched1.size());
+	vector<bool> sorted_matches_mag(matched1.size());
+	vector<bool> sorted_matches(matched1.size());
+
+	for (int m = 0; m < matched1.size(); m++) {
+		cout << abs(angs[m] - mean(angs)[0]) << endl;
+		if (abs(angs[m] - mean(angs)[0]) < stdDev_ang) {
+			sorted_matches_ang[m] = 1;
+		}
+		else {
+			sorted_matches_ang[m] = 0;
+		}
+		if (abs(mags[m] - mean(mags)[0]) < stdDev_mag) {
+			sorted_matches_mag[m] = 1;
+		}
+		else {
+			sorted_matches_mag[m] = 0;
+		}
+		sorted_matches[m] = sorted_matches_ang[m] && sorted_matches_mag[m];
+
+		//cout << "Sorted matches at " << m << ": " << sorted_matches_ang[m] << ", " << sorted_matches_mag[m] << ", " << sorted_matches[m] << endl;
+	}
+
+	vector<KeyPoint> matched1_;
+	vector<KeyPoint> matched2_;
+	for (unsigned i = 0; i < matched1.size(); i++) {
+		//cout << mkeypoints[i].distance;
+		//cout << nn_match_ratio * mkeypoints[i].distance;
+		if (sorted_matches[i] == 1) {
+			matched1_.push_back(matched1[i]);
+			matched2_.push_back(matched2[i]);
+		}
+	}
+
 	Mat inlier_mask, homographytemp;
 	vector<KeyPoint> inliers1, inliers2;
 	vector<DMatch> inlier_matches;
 	if (matched1.size() >= 4) {
-		homographytemp = findHomography(Points(matched1), Points(matched2),
+		homographytemp = findHomography(Points(matched1_), Points(matched2_),
 			RANSAC, ransac_thresh, inlier_mask);
 	}
 	else {
@@ -76,11 +137,11 @@ int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* ke
 	}
 	//cout << homography;
 
-	for (unsigned i = 0; i < matched1.size(); i++) {
+	for (unsigned i = 0; i < matched1_.size(); i++) {
 		if (inlier_mask.at<uchar>(i)) {
 			int new_i = static_cast<int>(inliers1.size());
-			inliers1.push_back(matched1[i]);
-			inliers2.push_back(matched2[i]);
+			inliers1.push_back(matched1_[i]);
+			inliers2.push_back(matched2_[i]);
 			inlier_matches.push_back(DMatch(new_i, new_i, 0));
 		}
 	}
@@ -92,6 +153,8 @@ int homographyCalculator(vector<DMatch>* matched_keypoints, vector<KeyPoint>* ke
 		Scalar(255, 0, 0), Scalar(255, 0, 0));
 	*res = restemp;
 	*homography = homographytemp;
+	*matched_1 = matched1_;
+	*matched_2 = matched2_;
 	return 0;
 }
 
