@@ -189,8 +189,7 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 		Scalar(255, 0, 0), Scalar(255, 0, 0));
 	*res = restemp;
 	*homography = homographytemp;
-	*matched_1 = matched1_;
-	*matched_2 = matched2_;
+
 	return 0;
 }
 
