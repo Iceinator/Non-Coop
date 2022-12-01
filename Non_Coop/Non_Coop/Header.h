@@ -20,6 +20,11 @@ public:
 	Mat descriptor1;
 	Mat descriptor2;
 
+	//Intrinsic
+	Mat cameraMatrix = (Mat_<double>(3, 3) << 4766.92461024042, 0, 602.849676330207,
+												0, 4733.36134108249, 569.156279267313,
+												0, 0, 1);
+	Mat distCoeffs = (Mat_<double>(5, 1) << 1.1682938974656, -31.6276409521339, 0, 0, 0);
 	
 
 	Point2f CenterPoint;//Centerpoint in imageplane

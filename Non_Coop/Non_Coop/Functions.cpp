@@ -101,6 +101,7 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 		}
 	}
 
+	/*
 	// Angles (angs) and magnitudes (mags)
 	vector<float> angs(matched1.size());
 	vector<float> mags(matched1.size());
@@ -159,25 +160,25 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 			matched2_.push_back(matched2[i]);
 		}
 	}
-
+	*/
 	Mat inlier_mask, homographytemp;
 	vector<KeyPoint> inliers1, inliers2;
 	vector<DMatch> inlier_matches;
 	if (matched1.size() >= 4) {
-		homographytemp = findHomography(Points(matched1_), Points(matched2_),
+		homographytemp = findHomography(Points(matched1), Points(matched2),
 			RANSAC, ransac_thresh, inlier_mask);
 	}
 	else {
-		cout << "Error: Homography determination failed";
+		cout << "\nError: Homography determination failed!!!!!!!!!!!!!\n";
 		return 1;
 	}
 	//cout << homography;
 
-	for (unsigned i = 0; i < matched1_.size(); i++) {
+	for (unsigned i = 0; i < matched1.size(); i++) {
 		if (inlier_mask.at<uchar>(i)) {
 			int new_i = static_cast<int>(inliers1.size());
-			inliers1.push_back(matched1_[i]);
-			inliers2.push_back(matched2_[i]);
+			inliers1.push_back(matched1[i]);
+			inliers2.push_back(matched2[i]);
 			inlier_matches.push_back(DMatch(new_i, new_i, 0));
 		}
 	}
@@ -329,7 +330,7 @@ vector<Point3f> calcChessboardCorners(Size boardSize,int squareSize) {
 	return objectPoints;
 }
 
-double Distance(Mat Skak1, Sat* Sat1,float squareSize,string intrinsicsPath) {
+double Distance(Mat Skak1, Sat* Sat1,float squareSize) {
 	//Takes two chess boards and computes the distance from the image plane to the object plan
 	
 	
@@ -344,29 +345,23 @@ double Distance(Mat Skak1, Sat* Sat1,float squareSize,string intrinsicsPath) {
 	}
 	vector<Point3f> objectPoints;
 	//calsChessboardCorners()
-	string intrinsicsPathCM = intrinsicsPath + "D1";
-	string intrinsicsPathDC = intrinsicsPath + "K1";
-	objectPoints = calcChessboardCorners(patternSize, squareSize);
-	FileStorage fsCM(samples::findFile(intrinsicsPathCM), FileStorage::READ);
-	FileStorage fsDC(samples::findFile(intrinsicsPathDC), FileStorage::READ);
-	Mat cameraMatrix, distCoeffs;
-	
 
-	fsCM["CM"] >> cameraMatrix;
-	fsDC["DC"] >> distCoeffs;
+	objectPoints = calcChessboardCorners(patternSize, squareSize);
+
 	
 	Mat rvec1, tvec1;
-	solvePnP(objectPoints, corners1, cameraMatrix, distCoeffs, rvec1, tvec1);
+	solvePnP(objectPoints, corners1, Sat1->cameraMatrix, Sat1->distCoeffs, rvec1, tvec1);
 	//Mat rvec2, tvec2;
 	//solvePnP(objectPoints, corners2, cameraMatrix, distCoeffs, rvec2, tvec2);
-	
+	Mat_<double> R1;
+	Rodrigues(rvec1, R1);
 	
 	
 	Mat normal = (Mat_<double>(3, 1) << 0, 0, 1);
-	Mat normal1 = rvec1 * normal;
+	Mat normal1 = R1 * normal;
 
 	Mat origin(3, 1, CV_64F, Scalar(0));
-	Mat origin1 = rvec1 * origin + tvec1;
+	Mat origin1 = R1 * origin + tvec1;
 	double d_inv1 = 1.0 / normal1.dot(origin1);
 
 
@@ -423,3 +418,4 @@ int GetFrame(string Filename, Mat* Outframe) {
 	*Outframe = frame;
 	return 0;
 }
+

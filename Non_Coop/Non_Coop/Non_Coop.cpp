@@ -137,7 +137,8 @@ int main()
 	*/
 
 	//Does it on a Number of images.
-	
+
+
 
 	/*____________________init______________________________*/
 	Sat Cubesat;
@@ -147,30 +148,54 @@ int main()
 	vector<KeyPoint> keypoints1;
 	vector<KeyPoint> keypoints2;
 	vector<DMatch> matched_keypoints;
-	Mat homography, res,imgRef;
+	Mat homography, res,imgRef,skak1,imgObs;
 	vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
 	Mat K = (Mat_<double>(3, 3) << 1084.68897884346, 0, 297.086796634874, 0, 1084.57557605294, 249.571718427411, 0, 0, 1);
 	/*_______________________________________________________________________________________________________________________*/
-
-	int f = GetFrame("", imgRef);
-
-
+	//Taking the ref image, Press ESC to pic the frame
+	int f = GetFrame("..\\..\\.\\Data\\Cam-2\\Ref.MOV", &imgRef);
+	
 	//Loading images
-	string Path0 = "..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_" + to_string(45) + ".png";
+	//string Path0 = "..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_" + to_string(45) + ".png";
 	//Mat imgRef = imread(Path0);
 	Point2f Cp0 = Cp(imgRef);
 	//Calc the distance d in the ref image
 	//Load the chess boad images
-	Mat skak1 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_");
+	f = GetFrame("..\\..\\.\\Data\\Cam-2\\Chess.MOV", &skak1);
+	//Mat skak1 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_");
 	//Mat skak2 = imread("..\\..\\.\\Data\\image_analysis_data\\Serie_8\\Cropped\\image_data_2_");
-	string PathIntri = "..\\..\\.\\Data\\";
+	
 
 	//Finding the distance to the opject in ref image
 
 	float SquarSize=0.022; //22mm Squar Size for the used board
-	double d = Distance(skak1, &Cubesat, SquarSize, PathIntri);
+	//double d = Distance(skak1, &Cubesat, SquarSize);
+	double d = -172.45;
+	f = GetFrame("..\\..\\.\\Data\\Cam-2\\TransDown.MOV", &imgObs);
+	FindKeypointsRef(imgRef, &Cubesat, 500);
+	
+	MatchKeypoints(imgRef, imgObs, &img_match, &Cubesat, &matched_keypoints, 500);
+	homographyCalculator(&matched_keypoints, &Cubesat, &homography, &imgRef, &imgObs, &res);
+	//vector<Mat> Rs_decomp, ts_decomp, normals_decomp;
 
+	int solutions = decomposeHomographyMat(homography, K, Rs_decomp, ts_decomp, normals_decomp);
+	int best = BestRotSolution(solutions, Rs_decomp, ts_decomp, normals_decomp, d);
+	Cubesat.CenterPoint = CpTrack(homography, Cp0);
+	//Cubesat.Rotation.x = float(ts_decomp[best]);
 
+	cout << "\nRs comp values" << Rs_decomp[best];
+	DrawPOS(&imgObs, Rs_decomp, best, &Cubesat);
+	string Rotation[3] = { "x:","y:","z:" };
+	//Rotation[0] = Rotation[0] + to_string(ts_decomp[0]);
+	//Rotation[1] = Rotation[1] + to_string(ts_decomp[1]);
+	//Rotation[2] = Rotation[2] + to_string(ts_decomp[2]);
+
+	putText(imgObs, Rotation[0], Point(10, imgObs.rows / 2 + 30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 0, 255), 2);
+	putText(imgObs, Rotation[1], Point(10, imgObs.rows / 2), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 255, 0), 2);
+	putText(imgObs, Rotation[2], Point(10, imgObs.rows / 2 - 30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
+	imshow("End", imgObs);
+	imshow("Ref", imgRef);
+	char c = (char)waitKey(10);
 
 	//Mat descriptor1;
 	for (int i = 46; i < 92;i++) {
