@@ -71,8 +71,8 @@ void MatchKeypoints(Mat imgRef, Mat imgObs,Mat* out_img,Sat* Sat1,vector<DMatch>
 	//Match key points
 	matcher->match(Sat1->descriptor1, descriptor_2, matches);
 	Mat img_match;
-	drawMatches(imgRef, Sat1->keypoints1, imgObs, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
-		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	//drawMatches(imgRef, Sat1->keypoints1, imgObs, keypoints_2, matches, img_match, Scalar::all(-1), Scalar::all(-1),
+		//vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	//return img_match, keypoints_1, keypoints_2, descriptor_1, descriptor_2;
 	*out_img = img_match.clone();
 	
@@ -101,7 +101,7 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 		}
 	}
 
-	/*
+	
 	// Angles (angs) and magnitudes (mags)
 	vector<float> angs(matched1.size());
 	vector<float> mags(matched1.size());
@@ -132,7 +132,7 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 	vector<bool> sorted_matches(matched1.size());
 
 	for (int m = 0; m < matched1.size(); m++) {
-		cout << abs(angs[m] - mean(angs)[0]) << endl;
+		//cout << abs(angs[m] - mean(angs)[0]) << endl;
 		if (abs(angs[m] - mean(angs)[0]) < stdDev_ang) {
 			sorted_matches_ang[m] = 1;
 		}
@@ -160,12 +160,12 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 			matched2_.push_back(matched2[i]);
 		}
 	}
-	*/
+	
 	Mat inlier_mask, homographytemp;
 	vector<KeyPoint> inliers1, inliers2;
 	vector<DMatch> inlier_matches;
-	if (matched1.size() >= 4) {
-		homographytemp = findHomography(Points(matched1), Points(matched2),
+	if (matched1_.size() >= 4) {
+		homographytemp = findHomography(Points(matched1_), Points(matched2_),
 			RANSAC, ransac_thresh, inlier_mask);
 	}
 	else {
@@ -174,11 +174,11 @@ int homographyCalculator(vector<DMatch>* matched_keypoints,Sat* Sat1, Mat* homog
 	}
 	//cout << homography;
 
-	for (unsigned i = 0; i < matched1.size(); i++) {
+	for (unsigned i = 0; i < matched1_.size(); i++) {
 		if (inlier_mask.at<uchar>(i)) {
 			int new_i = static_cast<int>(inliers1.size());
-			inliers1.push_back(matched1[i]);
-			inliers2.push_back(matched2[i]);
+			inliers1.push_back(matched1_[i]);
+			inliers2.push_back(matched2_[i]);
 			inlier_matches.push_back(DMatch(new_i, new_i, 0));
 		}
 	}
@@ -269,7 +269,7 @@ int BestRotSolution(int solutions, vector<Mat> Rs_decomp, vector<Mat>ts_decomp, 
 		//cout << "rvec from camera displacement: " << rvec_1to2.t() << endl;
 		cout << "tvec from homography decomposition: " << ts_decomp[i].t() << " and scaled by d: " << factor_d1 * ts_decomp[i].t() << endl;
 		//cout << "tvec from camera displacement: " << t_1to2.t() << endl;
-		cout << "plane normal from homography decomposition: " << normals_decomp[i].t() << endl;
+		//cout << "plane normal from homography decomposition: " << normals_decomp[i].t() << endl;
 		//cout << "plane normal at camera 1 pose: " << normal1.t() << endl << endl;
 
 
@@ -316,6 +316,22 @@ void DrawPOS(Mat* img2, vector<Mat> Rs_decomp,int best_decomp,Sat* Sat1) {
 	arrowedLine(*img2, Sat1->CenterPoint, cendx, Scalar(255, 0, 0), 1);
 	arrowedLine(*img2, Sat1->CenterPoint, cendy, Scalar(0, 255, 0), 1);
 	arrowedLine(*img2, Sat1->CenterPoint, cendz, Scalar(0, 0, 255), 1);
+
+	string Rotation[3] = { "x","y","z" };
+	putText(*img2, Rotation[0], cendx, FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 0, 255), 2);
+	putText(*img2, Rotation[1], cendy, FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 255, 0), 2);
+	putText(*img2, Rotation[2], cendz, FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
+
+
+	string CpCoordinates[3] = { "x:"+to_string(Sat1->CpOpj.x),
+								"y:"+to_string(Sat1->CpOpj.y),
+								"z:"+to_string(Sat1->CpOpj.z)};
+
+
+
+	putText(*img2, CpCoordinates[0], Point(10, img2->rows / 2 + 30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 0, 255), 2);
+	putText(*img2, CpCoordinates[1], Point(10, img2->rows / 2), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0, 255, 0), 2);
+	putText(*img2, CpCoordinates[2], Point(10, img2->rows / 2 - 30), FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255, 0, 0), 2);
 
 
 }

@@ -1,1 +1,45 @@
-﻿  Non_Coop.vcxproj -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\x64\Debug\Non_Coop.exe
+﻿  Functions.cpp
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(110,17): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(111,17): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(120,20): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(121,20): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(220,33): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(220,18): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(232,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(284,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(286,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(288,17): warning C4244: 'argument': conversion from 'int' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=float
+          ]
+C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\Non_Coop\Functions.cpp(365,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Non_Coop.vcxproj -> C:\Users\chris\OneDrive - Danmarks Tekniske Universitet\Master\Non-Coop4\Non_Coop\x64\Debug\Non_Coop.exe
